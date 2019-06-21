@@ -8,8 +8,10 @@ export const ProductDetails: React.FunctionComponent<Navigation> = props => {
   const product = navigation.getParam("product");
   return (
     <View>
-      <Icon name={product.icon} />
-      <Text>{product.name}</Text>
+      <View>
+        <Icon name={product.icon} />
+        <Text>{product.name}</Text>
+      </View>
       <Text>{product.description}</Text>
       <Button
         title="goBack"

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Navigation } from "../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
 import { Icon } from "react-native-elements";
@@ -7,6 +7,31 @@ import { Icon } from "react-native-elements";
 interface Props extends Navigation {
   navigationOptions: NavigationScreenProps;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderColor: "black",
+    borderRadius: 4,
+    borderWidth: 0.5,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    marginTop: 5
+  },
+  name: {
+    fontSize: 20,
+    marginVertical: 15,
+    flexGrow: 2
+  },
+  icon: {
+    marginVertical: 15,
+    marginHorizontal: 15
+  },
+  products: {
+    flex: 1,
+    justifyContent: "flex-start"
+  }
+});
 
 const mockData = [
   {
@@ -46,24 +71,26 @@ const mockData = [
 export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   return (
-    <View>
-      {mockData.map(product => {
-        return (
-          <View key={product.id}>
-            <Icon name={product.icon} />
-            <Text>{product.name}</Text>
-            <Icon
-              raised
-              name="ac-unit"
-              color="#f50"
-              onPress={() => {
-                navigation.navigate("ProductDetails", { product });
-              }}
-            />
-          </View>
-        );
-      })}
-    </View>
+    <ScrollView>
+      <View style={styles.products}>
+        {mockData.map(product => {
+          return (
+            <View key={product.id} style={styles.container}>
+              <Icon name={product.icon} size={35} iconStyle={styles.icon} />
+              <Text style={styles.name}>{product.name}</Text>
+              <Icon
+                raised
+                name="ac-unit"
+                color="#f50"
+                onPress={() => {
+                  navigation.navigate("ProductDetails", { product });
+                }}
+              />
+            </View>
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 };
 
