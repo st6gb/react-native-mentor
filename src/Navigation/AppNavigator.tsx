@@ -1,21 +1,39 @@
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import {
+  createStackNavigator,
+  createDrawerNavigator,
+  createAppContainer,
+  createSwitchNavigator
+} from "react-navigation";
 import { Login, ProductDetails, ProductList } from "../screens";
 
-const AppNavigator = createStackNavigator(
-  {
-    Login: {
-      screen: Login
-    },
-    ProductDetails: {
-      screen: ProductDetails
-    },
-    ProductList: {
-      screen: ProductList
-    }
+const AppStack = createStackNavigator({
+  ProductList: {
+    screen: ProductList
   },
-  {
-    initialRouteName: "Login"
+  ProductDetails: {
+    screen: ProductDetails
   }
-);
+});
 
-export default createAppContainer(AppNavigator);
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: Login
+  }
+});
+
+const AppDraw = createDrawerNavigator({
+  AppStack,
+  AuthStack
+});
+
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      AppDraw,
+      AuthStack
+    },
+    {
+      initialRouteName: "AuthStack"
+    }
+  )
+);
