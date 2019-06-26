@@ -16,7 +16,6 @@ export const LoginIn = async (navigation: any, values: any) => {
     });
     const json = await resp.json();
     if (resp.status !== 200) return;
-    console.log(json);
     await AsyncStorage.setItem("@token", JSON.stringify(json));
     navigation.navigate("AppStack");
   } catch (err) {

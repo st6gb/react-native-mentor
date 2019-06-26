@@ -10,22 +10,21 @@ import {
 import { Navigation } from "../../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
 import { Icon } from "react-native-elements";
-import { getProductsInShop, addProductinList } from "./utils";
-import AsyncStorage from "@react-native-community/async-storage";
+import { getUsersProducts } from "./utils";
 
-import { styles } from "./ProductList.styles";
+import { styles } from "./styles";
 
 interface Props extends Navigation {
   navigationOptions: NavigationScreenProps;
 }
 
-export const ProductList: React.FunctionComponent<Props> = props => {
+export const GoodsList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [loading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
   React.useEffect(() => {
     if (products.length === 0) {
-      getProductsInShop()
+      getUsersProducts()
         .then(res => {
           console.log(res);
           setProducts(res);
@@ -39,16 +38,6 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   return (
     <ScrollView>
       <View style={styles.products}>
-        <Button
-          title="storage"
-          onPress={async () => {
-            try {
-              const token = await AsyncStorage.getItem("@token");
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-        />
         {loading && <ActivityIndicator size="large" color="#0000ff" />}
         {!loading &&
           products.map(product => {
@@ -63,14 +52,6 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                 >
                   <Icon name={product.icon} size={35} iconStyle={styles.icon} />
                   <Text style={styles.name}>{product.name}</Text>
-                  <Icon
-                    raised
-                    name="ac-unit"
-                    color="#f50"
-                    onPress={() => {
-                      addProductinList(product).then(res => console.log(res));
-                    }}
-                  />
                 </TouchableOpacity>
               );
             }
@@ -81,33 +62,13 @@ export const ProductList: React.FunctionComponent<Props> = props => {
 };
 
 // @ts-ignore
-ProductList.navigationOptions = ({ navigation }) => {
+GoodsList.navigationOptions = ({ navigation }) => {
   return {
-    title: "Products",
+    title: "MyProducts",
     headerStyle: {
       backgroundColor: "#f4511e"
     },
     headerTintColor: "#fff",
-    headerLeft: (
-      <Icon
-        raised
-        name="book"
-        color="#f50"
-        onPress={() => {
-          navigation.openDrawer();
-        }}
-      />
-    ),
-    headerRight: (
-      <Icon
-        raised
-        name="book"
-        color="#f50"
-        onPress={() => {
-          navigation.navigate("GoodsList");
-        }}
-      />
-    ),
     headerTitleStyle: {
       fontWeight: "bold"
     }

@@ -4,7 +4,13 @@ import {
   createAppContainer,
   createSwitchNavigator
 } from "react-navigation";
-import { Login, ProductDetails, ProductList, SingUp } from "../screens";
+import {
+  Login,
+  ProductDetails,
+  ProductList,
+  SingUp,
+  GoodsList
+} from "../screens";
 
 const AppStack = createStackNavigator({
   ProductList: {
@@ -12,6 +18,9 @@ const AppStack = createStackNavigator({
   },
   ProductDetails: {
     screen: ProductDetails
+  },
+  GoodsList: {
+    screen: GoodsList
   }
 });
 

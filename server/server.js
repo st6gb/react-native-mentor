@@ -44,7 +44,7 @@ app.post('/new-user', (req, res) => {
   })
 });
 
-app.get('/product', (req, res) => {
+app.get('/userProduct', (req, res) => {
   try {
     const decodedUser = jwt.verify(req.headers.token, jwtsecret);
     MongoClient.connect('mongodb://localhost:27017/test', function (err, client) {
