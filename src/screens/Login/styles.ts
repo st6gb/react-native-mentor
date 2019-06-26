@@ -18,5 +18,8 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 0.5,
     width: 300
+  },
+  errorMessage: {
+    color: 'red'
   }
 });

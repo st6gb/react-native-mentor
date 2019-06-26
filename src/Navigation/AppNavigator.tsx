@@ -4,7 +4,7 @@ import {
   createAppContainer,
   createSwitchNavigator
 } from "react-navigation";
-import { Login, ProductDetails, ProductList } from "../screens";
+import { Login, ProductDetails, ProductList, SingUp } from "../screens";
 
 const AppStack = createStackNavigator({
   ProductList: {
@@ -18,22 +18,20 @@ const AppStack = createStackNavigator({
 const AuthStack = createStackNavigator({
   Login: {
     screen: Login
+  },
+  SingUp: {
+    screen: SingUp
   }
 });
 
-const AppDraw = createDrawerNavigator({
-  AppStack,
-  AuthStack
-});
-
-export default createAppContainer(
-  createSwitchNavigator(
-    {
-      AppDraw,
-      AuthStack
-    },
-    {
-      initialRouteName: "AuthStack"
-    }
-  )
+const AppDraw = createDrawerNavigator(
+  {
+    AppStack,
+    AuthStack
+  },
+  {
+    initialRouteName: "AuthStack"
+  }
 );
+
+export default createAppContainer(AppDraw);

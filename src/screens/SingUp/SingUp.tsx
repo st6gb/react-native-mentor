@@ -1,10 +1,11 @@
 import * as React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { View, Text, Button, Image } from "react-native";
+import { View, Text, Button, Image, Alert } from "react-native";
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LoginIn } from "./utils";
+import AsyncStorage from "@react-native-community/async-storage";
+import { createNewUser } from "./utils";
 import { Navigation } from "../../interfaces/screen.interface";
 import { styles } from "./styles";
 
@@ -30,18 +31,39 @@ const InputError: React.FunctionComponent<Props> = ({
   ) : null;
 };
 
-export const Login: React.FunctionComponent<Navigation> = props => {
+export const SingUp: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;
   return (
     <View style={styles.container}>
       <Image style={styles.icon} source={require("../../assets/smile.png")} />
-      <Text style={styles.title}>Friday's shop</Text>
+      <Text style={styles.title}>Sing UP</Text>
 
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={SingUpSchema}
         onSubmit={values => {
-          LoginIn(navigation, values);
+          createNewUser(values).then(response => {
+            Alert.alert(
+              "Alert",
+              `${
+                response === 200
+                  ? "Пользователь успешно создан, перейти на страницу логина?"
+                  : "Пользователь уже существует, попробуйте снова"
+              }`,
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                {
+                  text: "OK",
+                  onPress: () => (response === 200 ? navigation.goBack() : null)
+                }
+              ],
+              { cancelable: false }
+            );
+          });
         }}
       >
         {props => (
@@ -71,7 +93,7 @@ export const Login: React.FunctionComponent<Navigation> = props => {
               id="password"
             />
             <Button
-              title="login"
+              title="sing up"
               onPress={() => {
                 props.handleSubmit();
               }}
@@ -80,9 +102,9 @@ export const Login: React.FunctionComponent<Navigation> = props => {
         )}
       </Formik>
       <Button
-        title="sing up"
+        title="Go back"
         onPress={() => {
-          navigation.navigate("SingUp");
+          navigation.goBack();
         }}
       />
     </View>
