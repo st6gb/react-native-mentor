@@ -4,13 +4,13 @@ import {
   View,
   Text,
   ScrollView,
-  Button,
   TouchableOpacity
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
 import { Icon } from "react-native-elements";
-import { getUsersProducts } from "./utils";
+import { getUsersProducts } from "../../services/httpClient";
+import { Product } from "../../interfaces/screen.interface";
 
 import { styles } from "./styles";
 
@@ -26,7 +26,6 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
     if (products.length === 0) {
       getUsersProducts()
         .then(res => {
-          console.log(res);
           setProducts(res);
           setLoading(false);
         })
@@ -40,7 +39,7 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
       <View style={styles.products}>
         {loading && <ActivityIndicator size="large" color="#0000ff" />}
         {!loading &&
-          products.map(product => {
+          products.map((product: Product) => {
             if (product) {
               return (
                 <TouchableOpacity

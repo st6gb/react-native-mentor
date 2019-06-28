@@ -1,8 +1,8 @@
 import * as React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button } from "react-native";
 import { Icon } from "react-native-elements";
 import { Navigation } from "../../interfaces/screen.interface";
-import { styles } from "./ProductDetails.styles";
+import { styles } from "./styles";
 
 export const ProductDetails: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;

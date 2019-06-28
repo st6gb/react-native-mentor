@@ -4,8 +4,8 @@ import { View, Text, Button, Image, Alert } from "react-native";
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import AsyncStorage from "@react-native-community/async-storage";
-import { createNewUser } from "./utils";
+import { createNewUser } from "../../services/httpClient";
+import { InputError } from "../../components/InputError";
 import { Navigation } from "../../interfaces/screen.interface";
 import { styles } from "./styles";
 
@@ -14,30 +14,12 @@ const SingUpSchema = Yup.object().shape({
   password: Yup.string().required()
 });
 
-type Props = {
-  errors: any;
-  touched: any;
-  id: string;
-};
-
-const InputError: React.FunctionComponent<Props> = ({
-  errors,
-  touched,
-  id
-}) => {
-  const showError = errors[id] && touched[id];
-  return showError ? (
-    <Text style={styles.errorMessage}>{errors[id]}</Text>
-  ) : null;
-};
-
 export const SingUp: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;
   return (
     <View style={styles.container}>
       <Image style={styles.icon} source={require("../../assets/smile.png")} />
       <Text style={styles.title}>Sing UP</Text>
-
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={SingUpSchema}

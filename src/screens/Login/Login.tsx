@@ -4,7 +4,8 @@ import { View, Text, Button, Image } from "react-native";
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LoginIn } from "./utils";
+import { LoginIn } from "../../services/httpClient";
+import { InputError } from "../../components/InputError";
 import { Navigation } from "../../interfaces/screen.interface";
 import { styles } from "./styles";
 
@@ -12,23 +13,6 @@ const SingUpSchema = Yup.object().shape({
   email: Yup.string().required(),
   password: Yup.string().required()
 });
-
-type Props = {
-  errors: any;
-  touched: any;
-  id: string;
-};
-
-const InputError: React.FunctionComponent<Props> = ({
-  errors,
-  touched,
-  id
-}) => {
-  const showError = errors[id] && touched[id];
-  return showError ? (
-    <Text style={styles.errorMessage}>{errors[id]}</Text>
-  ) : null;
-};
 
 export const Login: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;
