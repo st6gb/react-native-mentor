@@ -1,5 +1,5 @@
-export { Login } from './Login/Login';
-export { ProductList } from './ProductList/ProductList';
-export { ProductDetails } from './ProductDetails/ProductDetails';
-export { SingUp } from './SingUp/SingUp';
-export { GoodsList } from './GoodsList/GoodList';
+export { Login } from './Login';
+export { ProductList } from './ProductList';
+export { ProductDetails } from './ProductDetails';
+export { SingUp } from './SingUp';
+export { GoodsList } from './GoodsList';
