@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { LoginIn } from "../../services/httpClient";
 import { InputError } from "../../components/InputError";
 import { Navigation } from "../../interfaces/screen.interface";
+
 import { styles } from "./styles";
 
 const SingUpSchema = Yup.object().shape({

@@ -1,9 +1,10 @@
 import AsyncStorage from "@react-native-community/async-storage";
+import { notification } from "../utils/notification";
 
 export const getUsersProducts = async () => {
   try {
     const token = await AsyncStorage.getItem('@token');
-    if (token === null) throw ('lala');
+    if (token === null) throw ('error');
     const strToken = JSON.parse(token);
     const response = await fetch("http://10.27.11.60:3001/userProduct", {
       method: "GET",
@@ -36,7 +37,10 @@ export const LoginIn = async (navigation: any, values: any) => {
       })
     });
     const json = await resp.json();
-    if (resp.status !== 200) return;
+    if (resp.status !== 200) {
+      notification("логин или пароль не верный", "error");
+      return;
+    }
     await AsyncStorage.setItem("@token", JSON.stringify(json));
     navigation.navigate("AppStack");
   } catch (err) {
@@ -57,9 +61,8 @@ export const getProductsInShop = async () => {
 export const addProductInList = async (product: any) => {
   try {
     const token = await AsyncStorage.getItem('@token');
-    if (token === null) throw ('lala');
+    if (token === null) throw ('error');
     const strToken = JSON.parse(token);
-    console.log(strToken);
     const response = await fetch('http://10.27.11.60:3001/setProduct', {
       method: "POST",
       headers: {

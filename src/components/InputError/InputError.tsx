@@ -22,7 +22,6 @@ export const InputError: React.FunctionComponent<Props> = ({
   touched,
   id
 }) => {
-  console.log(errors, touched);
   const showError = errors[id] && touched[id];
   return showError ? (
     <Text style={styles.errorMessage}>{errors[id]}</Text>

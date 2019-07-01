@@ -13,6 +13,7 @@ import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
 import { getProductsInShop, addProductInList } from "../../services/httpClient";
 import { Product } from "../../interfaces/screen.interface";
+import { notification } from "../../utils/notification";
 
 import { styles } from "./styles";
 
@@ -24,6 +25,7 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [loading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
+
   React.useEffect(() => {
     if (products.length === 0) {
       getProductsInShop()
@@ -58,7 +60,15 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                     name="ac-unit"
                     color="#f50"
                     onPress={() => {
-                      addProductInList(product).then(res => console.log(res));
+                      addProductInList(product).then(response => {
+                        if (!response.ok) {
+                          return notification("ошибка", "error");
+                        }
+                        if (response.nModified) {
+                          return notification("Добавлено", "ok");
+                        }
+                        return notification("Уже добавлено", "attention");
+                      });
                     }}
                   />
                 </TouchableOpacity>

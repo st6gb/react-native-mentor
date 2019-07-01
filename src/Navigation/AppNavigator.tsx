@@ -43,14 +43,4 @@ const AppSwitch = createSwitchNavigator(
   }
 );
 
-const AppDraw = createDrawerNavigator(
-  {
-    AppStack,
-    AuthStack
-  },
-  {
-    initialRouteName: "AuthStack"
-  }
-);
-
 export default createAppContainer(AppSwitch);

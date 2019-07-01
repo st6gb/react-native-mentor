@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
+import { Icon } from "react-native-elements";
 import { Navigation } from "../../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
-import { Icon } from "react-native-elements";
 import { getUsersProducts } from "../../services/httpClient";
 import { Product } from "../../interfaces/screen.interface";
 
@@ -61,7 +61,7 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
 };
 
 // @ts-ignore
-GoodsList.navigationOptions = ({ navigation }) => {
+GoodsList.navigationOptions = () => {
   return {
     title: "MyProducts",
     headerStyle: {
