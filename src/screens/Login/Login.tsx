@@ -1,5 +1,6 @@
 import * as React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
+import AsyncStorage from "@react-native-community/async-storage";
 import { View, Text, Button, Image } from "react-native";
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
@@ -16,11 +17,20 @@ const SingUpSchema = Yup.object().shape({
 
 export const Login: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;
+  const getToken = async () => {
+    return await AsyncStorage.getItem("@token");
+  };
+  React.useEffect(() => {
+    getToken().then(res => {
+      if (res) {
+        navigation.navigate("ProductList");
+      }
+    });
+  }, []);
   return (
     <View style={styles.container}>
       <Image style={styles.icon} source={require("../../assets/smile.png")} />
       <Text style={styles.title}>Friday's shop</Text>
-
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={SingUpSchema}

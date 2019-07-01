@@ -33,6 +33,16 @@ const AuthStack = createStackNavigator({
   }
 });
 
+const AppSwitch = createSwitchNavigator(
+  {
+    AppStack,
+    AuthStack
+  },
+  {
+    initialRouteName: "AuthStack"
+  }
+);
+
 const AppDraw = createDrawerNavigator(
   {
     AppStack,
@@ -43,4 +53,4 @@ const AppDraw = createDrawerNavigator(
   }
 );
 
-export default createAppContainer(AppDraw);
+export default createAppContainer(AppSwitch);

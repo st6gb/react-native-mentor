@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const headerParser = require('header-parser');
 const jwt = require('jsonwebtoken');
 const jsonParser = bodyParser.json();
-const jwtsecret = "ssh";
+const jwtSecret = "ssh";
 const cors = require('cors');
 const { User, Product } = require('./schemasModel');
 
@@ -35,7 +35,7 @@ app.post('/new-user', async (req, res) => {
 
 app.get('/userProduct', async (req, res) => {
   try {
-    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtsecret);
+    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtSecret);
     const user = await User.findOne({ name: decodedUser.name });
     const product = user.products || [];
     res.send(product);
@@ -55,7 +55,7 @@ app.get('/products', async (req, res) => {
 
 app.post('/setProduct', async (req, res) => {
   try {
-    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtsecret);
+    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtSecret);
     const product = await Product.findOne({ name: req.body.name }).exec();
     const result = await User.update({ name: decodedUser.name }, { $addToSet: { products: product } });
     res.send(result);
@@ -68,7 +68,7 @@ app.post('/auth', async (req, res) => {
   try {
     const user = await User.findOne({ name: req.body.name }).exec();
     if (user.password === req.body.password) {
-      const token = jwt.sign({ ...user }, jwtsecret);
+      const token = jwt.sign({ ...user }, jwtSecret);
       res.send({ token });
       return;
     }

@@ -39,16 +39,6 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   return (
     <ScrollView>
       <View style={styles.products}>
-        <Button
-          title="storage"
-          onPress={async () => {
-            try {
-              const token = await AsyncStorage.getItem("@token");
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-        />
         {loading && <ActivityIndicator size="large" color="#0000ff" />}
         {!loading &&
           products.map((product: Product) => {
@@ -94,7 +84,8 @@ ProductList.navigationOptions = ({ navigation }) => {
         name="book"
         color="#f50"
         onPress={() => {
-          navigation.openDrawer();
+          navigation.navigate("Login");
+          AsyncStorage.removeItem("@token");
         }}
       />
     ),
