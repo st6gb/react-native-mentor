@@ -78,8 +78,7 @@ app.get('/executeOrder', async (req, res) => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/vnd.urbanairship+json; version=3",
-          Authorization:
-            "Bearer MTpYTl9hYV9iQlJZQ0gwVmJ6SlI2QmR3OkhPZ0lDM1NYRXNzQUxqNWZZRGt6cS02WFVwRmFxTVRxem5mMjB1VWZDWnM"
+          Authorization: adminToken
         },
         body: JSON.stringify({
           audience: { tag: tags[0] },

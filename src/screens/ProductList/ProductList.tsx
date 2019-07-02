@@ -57,7 +57,7 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                   <Text style={styles.name}>{product.name}</Text>
                   <Icon
                     raised
-                    name="ac-unit"
+                    name="add-shopping-cart"
                     color="#f50"
                     onPress={() => {
                       addProductInList(product).then(response => {
@@ -91,7 +91,8 @@ ProductList.navigationOptions = ({ navigation }) => {
     headerLeft: (
       <Icon
         raised
-        name="book"
+        name="people-outline"
+        type="material"
         color="#f50"
         onPress={() => {
           navigation.navigate("Login");
@@ -102,7 +103,7 @@ ProductList.navigationOptions = ({ navigation }) => {
     headerRight: (
       <Icon
         raised
-        name="book"
+        name="kitchen"
         color="#f50"
         onPress={() => {
           navigation.navigate("GoodsList");

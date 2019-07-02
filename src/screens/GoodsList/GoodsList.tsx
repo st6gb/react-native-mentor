@@ -66,7 +66,6 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
         onPress={() => {
           executeOrder(tags)
             .then(res => {
-              console.log(res);
               if (res.nModified) return setProducts([]);
               return notification("Empty", "attention");
             })
