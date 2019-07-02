@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.toast.RCTToastPackage;
 import com.facebook.react.ReactApplication;
+import com.urbanairship.reactnative.ReactAirshipPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -25,7 +26,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(new MainReactPackage(), new AsyncStoragePackage(), new VectorIconsPackage(),
+      return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new ReactAirshipPackage(), new AsyncStoragePackage(), new VectorIconsPackage(),
           new RNGestureHandlerPackage(), new RCTToastPackage());
     }
 

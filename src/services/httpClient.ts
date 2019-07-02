@@ -98,3 +98,25 @@ export const createNewUser = async (values: any) => {
     console.log(err);
   }
 };
+
+export const executeOrder = async (tags: string[]) => {
+  try {
+    const token = await AsyncStorage.getItem('@token');
+    if (token === null) throw ('error');
+    const strToken = JSON.parse(token);
+    const response = await fetch("http://10.27.11.60:3001/executeOrder", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        token: strToken.token,
+        tags: JSON.stringify(tags)
+      },
+      mode: "cors",
+    });
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log(err);
+  }
+}

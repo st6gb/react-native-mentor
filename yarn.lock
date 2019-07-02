@@ -4954,7 +4954,7 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.2.0:
+node-fetch@^2.2.0, node-fetch@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
@@ -7051,6 +7051,11 @@ update-notifier@^2.5.0:
     latest-version "^3.0.0"
     semver-diff "^2.0.0"
     xdg-basedir "^3.0.0"
+
+urbanairship-react-native@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/urbanairship-react-native/-/urbanairship-react-native-3.0.0.tgz#d88680a4861acb33c2a81b104228af62be611457"
+  integrity sha512-Zqrr7GPQeCj4TxpT/NAa36OuAtQF7KWfVgH0JpOtwPCy9Ej7PIzXEJaWyDJ9bingk9vsba+lr1My7nOB7jpYkw==
 
 uri-js@^4.2.2:
   version "4.2.2"

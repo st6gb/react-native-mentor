@@ -4,12 +4,15 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Button
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Navigation } from "../../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
-import { getUsersProducts } from "../../services/httpClient";
+import { getUsersProducts, executeOrder } from "../../services/httpClient";
+import { UrbanAirship, UACustomEvent } from "urbanairship-react-native";
+import { notification } from "../../utils/notification";
 import { Product } from "../../interfaces/screen.interface";
 
 import { styles } from "./styles";
@@ -22,7 +25,9 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [loading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
+  const [tags, setTags] = React.useState<string[]>([]);
   React.useEffect(() => {
+    UrbanAirship.getTags().then(tags => setTags(tags));
     if (products.length === 0) {
       getUsersProducts()
         .then(res => {
@@ -56,6 +61,18 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
             }
           })}
       </View>
+      <Button
+        title="order"
+        onPress={() => {
+          executeOrder(tags)
+            .then(res => {
+              console.log(res);
+              if (res.nModified) return setProducts([]);
+              return notification("Empty", "attention");
+            })
+            .catch(() => notification("Error", "error"));
+        }}
+      />
     </ScrollView>
   );
 };

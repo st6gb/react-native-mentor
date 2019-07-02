@@ -8,7 +8,9 @@ const jwt = require('jsonwebtoken');
 const jsonParser = bodyParser.json();
 const jwtSecret = "ssh";
 const cors = require('cors');
+const fetch = require('node-fetch');
 const { User, Product } = require('./schemasModel');
+const adminToken = 'Bearer MTpYTl9hYV9iQlJZQ0gwVmJ6SlI2QmR3OkhPZ0lDM1NYRXNzQUxqNWZZRGt6cS02WFVwRmFxTVRxem5mMjB1VWZDWnM';
 
 app.use(cors())
 app.use(jsonParser);
@@ -63,6 +65,35 @@ app.post('/setProduct', async (req, res) => {
     res.status(500).send(err)
   }
 });
+
+app.get('/executeOrder', async (req, res) => {
+  try {
+    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtSecret);
+    const tags = JSON.parse(req.headers.tags);
+    const result = await User.update({ name: decodedUser.name }, { $set: { products: [] } });
+    res.send(result);
+    if (result.nModified) {
+      fetch("https://go.urbanairship.com/api/push", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/vnd.urbanairship+json; version=3",
+          Authorization:
+            "Bearer MTpYTl9hYV9iQlJZQ0gwVmJ6SlI2QmR3OkhPZ0lDM1NYRXNzQUxqNWZZRGt6cS02WFVwRmFxTVRxem5mMjB1VWZDWnM"
+        },
+        body: JSON.stringify({
+          audience: { tag: tags[0] },
+          notification: {
+            alert: "Ваш товар будет в скором временем доставлен"
+          },
+          device_types: ["android"]
+        })
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
 
 app.post('/auth', async (req, res) => {
   try {
