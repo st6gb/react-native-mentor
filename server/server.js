@@ -48,7 +48,11 @@ app.get('/userProduct', async (req, res) => {
 
 app.get('/products', async (req, res) => {
   try {
-    const products = await Product.find().exec();
+    const options = {
+      page: req.query.page || 1,
+      limit: req.query.limits || 10
+    }
+    const products = await Product.paginate({}, options);
     res.send(products);
   } catch (err) {
     res.status(401).send(err)

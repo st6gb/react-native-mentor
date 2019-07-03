@@ -48,9 +48,9 @@ export const LoginIn = async (navigation: any, values: any) => {
   }
 };
 
-export const getProductsInShop = async () => {
+export const getProductsInShop = async (page: number) => {
   try {
-    const response = await fetch("http://10.27.11.60:3001/products");
+    const response = await fetch(`http://10.27.11.60:3001/products?page=${page}`);
     const json = await response.json();
     return json;
   } catch (err) {

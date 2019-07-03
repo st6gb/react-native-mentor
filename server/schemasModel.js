@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const productSchema = new mongoose.Schema({
   name: String,
   icon: String,
   description: String,
 })
+
+productSchema.plugin(mongoosePaginate);
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },

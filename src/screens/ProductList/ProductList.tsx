@@ -6,8 +6,8 @@ import {
   View,
   Text,
   ScrollView,
-  Button,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
@@ -25,12 +25,13 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [loading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
+  const [page, setPage] = React.useState(2);
 
   React.useEffect(() => {
     if (products.length === 0) {
-      getProductsInShop()
+      getProductsInShop(1)
         .then(res => {
-          setProducts(res);
+          setProducts(res.docs);
           setLoading(false);
         })
         .catch(err => {
@@ -39,44 +40,58 @@ export const ProductList: React.FunctionComponent<Props> = props => {
     }
   }, []);
   return (
-    <ScrollView>
-      <View style={styles.products}>
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-        {!loading &&
-          products.map((product: Product) => {
-            if (product) {
-              return (
-                <TouchableOpacity
-                  key={product._id}
-                  style={styles.container}
-                  onPress={() => {
-                    navigation.navigate("ProductDetails", { product });
-                  }}
-                >
-                  <Icon name={product.icon} size={35} iconStyle={styles.icon} />
-                  <Text style={styles.name}>{product.name}</Text>
-                  <Icon
-                    raised
-                    name="add-shopping-cart"
-                    color="#f50"
-                    onPress={() => {
-                      addProductInList(product).then(response => {
-                        if (!response.ok) {
-                          return notification("ошибка", "error");
-                        }
-                        if (response.nModified) {
-                          return notification("Добавлено", "ok");
-                        }
-                        return notification("Уже добавлено", "attention");
-                      });
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            }
-          })}
-      </View>
-    </ScrollView>
+    <View style={styles.products}>
+      <FlatList
+        data={products}
+        ListFooterComponent={() =>
+          loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
+        }
+        keyExtractor={(item, index) => item._id}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          setLoading(true);
+          getProductsInShop(page)
+            .then(res => {
+              setProducts([...products, ...res.docs]);
+              setPage(page + 1);
+              setLoading(false);
+            })
+            .catch(err => {
+              throw err;
+            });
+        }}
+        renderItem={({ item: product }) => {
+          return (
+            <TouchableOpacity
+              key={product._id}
+              style={styles.container}
+              onPress={() => {
+                navigation.navigate("ProductDetails", { product });
+              }}
+            >
+              <Icon name={product.icon} size={35} iconStyle={styles.icon} />
+              <Text style={styles.name}>{product.name}</Text>
+              <Icon
+                raised
+                name="add-shopping-cart"
+                color="#f50"
+                onPress={() => {
+                  addProductInList(product).then(response => {
+                    if (!response.ok) {
+                      return notification("ошибка", "error");
+                    }
+                    if (response.nModified) {
+                      return notification("Добавлено", "ok");
+                    }
+                    return notification("Уже добавлено", "attention");
+                  });
+                }}
+              />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </View>
   );
 };
 
