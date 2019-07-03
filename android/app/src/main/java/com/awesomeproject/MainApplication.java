@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.toast.RCTToastPackage;
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.urbanairship.reactnative.ReactAirshipPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new NetInfoPackage(),
             new ReactAirshipPackage(), new AsyncStoragePackage(), new VectorIconsPackage(),
           new RNGestureHandlerPackage(), new RCTToastPackage());
     }

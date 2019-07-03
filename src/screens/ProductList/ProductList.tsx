@@ -24,9 +24,8 @@ interface Props extends Navigation {
 export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [loading, setLoading] = React.useState(true);
-  const [products, setProducts] = React.useState([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const [page, setPage] = React.useState(2);
-
   React.useEffect(() => {
     if (products.length === 0) {
       getProductsInShop(1)
