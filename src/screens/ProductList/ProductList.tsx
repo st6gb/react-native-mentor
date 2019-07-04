@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
-import { getProductsInShop, addProductInList } from "../../services/httpClient";
+import { addProductInList } from "../../services/httpClient";
+import { useHttpClient } from "../../services/useHttpClient";
 import { Product } from "../../interfaces/screen.interface";
 import { notification } from "../../utils/notification";
-
+import { useNetInfo } from "@react-native-community/netinfo";
 import { styles } from "./styles";
 
 interface Props extends Navigation {
@@ -23,41 +24,31 @@ interface Props extends Navigation {
 
 export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
-  const [loading, setLoading] = React.useState(true);
-  const [products, setProducts] = React.useState<Product[]>([]);
-  const [page, setPage] = React.useState(2);
+  const {
+    getProductsInShop,
+    state: {
+      products: { data, loading, page }
+    }
+  } = useHttpClient();
+  const { isConnected } = useNetInfo();
   React.useEffect(() => {
-    if (products.length === 0) {
-      getProductsInShop(1)
-        .then(res => {
-          setProducts(res.docs);
-          setLoading(false);
-        })
-        .catch(err => {
-          throw err;
-        });
+    if (page === 1) {
+      getProductsInShop(page);
     }
   }, []);
   return (
     <View style={styles.products}>
       <FlatList
-        data={products}
+        data={data}
         ListFooterComponent={() =>
           loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
         }
         keyExtractor={(item, index) => item._id}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
-          setLoading(true);
-          getProductsInShop(page)
-            .then(res => {
-              setProducts([...products, ...res.docs]);
-              setPage(page + 1);
-              setLoading(false);
-            })
-            .catch(err => {
-              throw err;
-            });
+          getProductsInShop(page).catch(err => {
+            throw err;
+          });
         }}
         renderItem={({ item: product }) => {
           return (
