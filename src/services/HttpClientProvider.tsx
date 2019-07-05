@@ -10,9 +10,9 @@ const initialState = {
   }
 };
 export const HttpClientStateContext = React.createContext(initialState);
-export const HttpClientDispatch = React.createContext<React.Dispatch<Argument>>(
-  () => {}
-);
+export const HttpClientDispatch = React.createContext<
+  React.Dispatch<{ type: string; payload?: any }>
+>(() => {});
 
 type State = any;
 
@@ -56,7 +56,10 @@ export const addProducts = (products: Product[], page: number) => {
   };
 };
 
-const reducer = (state: State, { type, payload }: Argument) => {
+const reducer = (
+  state: State,
+  { type, payload }: { type: string; payload?: any }
+) => {
   switch (type) {
     case FETCH_PRODUCTS: {
       return {

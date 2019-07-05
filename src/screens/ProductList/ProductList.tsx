@@ -43,7 +43,7 @@ export const ProductList: React.FunctionComponent<Props> = props => {
         ListFooterComponent={() =>
           loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
         }
-        keyExtractor={(item, index) => item._id}
+        keyExtractor={(item: Product, index) => item._id}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
           getProductsInShop(page).catch(err => {

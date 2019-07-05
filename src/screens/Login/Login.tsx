@@ -1,7 +1,7 @@
 import * as React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-community/async-storage";
-import { View, Text, Button, Image } from "react-native";
+import { View, Text, Button, Image, Animated } from "react-native";
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -10,6 +10,8 @@ import { InputError } from "../../components/InputError";
 import { Navigation } from "../../interfaces/screen.interface";
 
 import { styles } from "./styles";
+import { RotateImage } from "../../components/RotateImage";
+import { AnimateTextSpring } from "../../components/AnimateTextSpring/AnimateTextSpring";
 
 const SingUpSchema = Yup.object().shape({
   email: Yup.string().required(),
@@ -30,7 +32,8 @@ export const Login: React.FunctionComponent<Navigation> = props => {
   }, []);
   return (
     <View style={styles.container}>
-      <Image style={styles.icon} source={require("../../assets/smile.png")} />
+      <RotateImage typeImage="smile" />
+      <AnimateTextSpring />
       <Text style={styles.title}>Friday's shop</Text>
       <Formik
         initialValues={{ email: "", password: "" }}

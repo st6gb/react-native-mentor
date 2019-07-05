@@ -4,6 +4,7 @@ import { UrbanAirship } from "urbanairship-react-native";
 import { Modal, Text, View, Button } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useHttpClient } from "./services/useHttpClient";
+import { Product } from "./interfaces/screen.interface";
 
 type Props = {};
 export const App: React.FunctionComponent<Props> = () => {
@@ -18,27 +19,29 @@ export const App: React.FunctionComponent<Props> = () => {
   } = useHttpClient();
   const functions = { getProductsInShop };
   React.useEffect(() => {
-    if (!isConnected && !isPushModal) {
+    if (!isConnected) {
       setShowModal(true);
     }
   }, [isConnected]);
   console.log(isConnected);
   return (
     <>
-      <Modal animationType="slide" visible={isShowModal}>
+      <Modal animationType="slide" visible={!isConnected}>
         <Text>Network hasn't connection</Text>
         <Text>You should restore network and try again</Text>
         <Button
           title="try again"
           onPress={() => {
             setPushModal(true);
-            functions[lastFunction](lastArguments).then(
-              ({ docs, nextPage }) => {
-                setPushModal(false);
-                setShowModal(false);
-                console.log(docs, nextPage);
-              }
-            );
+            if (functions[lastFunction]) {
+              functions[lastFunction](lastArguments).then(
+                ({ docs, nextPage }: { docs: Product[]; nextPage: number }) => {
+                  setPushModal(false);
+                  setShowModal(false);
+                  console.log(docs, nextPage);
+                }
+              );
+            }
           }}
         />
       </Modal>

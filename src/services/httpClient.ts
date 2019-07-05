@@ -120,3 +120,79 @@ export const executeOrder = async (tags: string[]) => {
     console.log(err);
   }
 }
+
+export const httpClient = {
+  async getAuthToken() {
+    try {
+      const token = await AsyncStorage.getItem('@token');
+      if (token === null) return "";
+      return JSON.parse(token).token;
+    } catch (err) {
+      throw new Error(`Request failed: ${err.message}`)
+    }
+  },
+  async get(url: string) {
+    try {
+      const token = await this.getAuthToken();
+      const headers = new Headers({
+        'Cache-Control': 'no-cache',
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        token,
+      });
+      const rawResponse = await fetch(url, {
+        method: 'GET',
+        headers,
+      });
+      if (rawResponse.status >= 400) {
+        throw new Error('Внутренняя ошибка сервера');
+      }
+      const response = await rawResponse.json();
+      return response;
+    } catch (err) {
+      throw new Error(`Request failed: ${err.message}`);
+    }
+  },
+  async sendRequest<T>(method: 'POST' | 'PUT' | 'DELETE', url: string, body?: T) {
+    try {
+      const token = await this.getAuthToken();
+      const headers = new Headers({
+        'Cache-Control': 'no-cache',
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        token,
+      });
+      const rawResponse = await fetch(url, {
+        method,
+        body: JSON.stringify(body),
+        headers
+      });
+      const response = await rawResponse.json();
+      return response;
+    } catch (err) {
+      throw new Error(`Request failed: ${err.message}`);
+    }
+  },
+  async post<T, R>(
+    url: string,
+    body?: T,
+  ) {
+    return this.sendRequest('POST', url, body);
+  },
+
+  async put<T, R>(
+    url: string,
+    body?: T,
+  ) {
+    const method = 'PUT';
+    return this.sendRequest(method, url, body);
+  },
+
+  async delete<T, R>(
+    url: string,
+    body?: T,
+  ) {
+    const method = 'DELETE';
+    return this.sendRequest(method, url, body);
+  },
+}
