@@ -138,6 +138,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-device-info')
+    implementation project(':lottie-react-native')
+    implementation project(':react-native-splash-screen')
     implementation project(':@react-native-community_netinfo')
     implementation project(':urbanairship-react-native')
     implementation project(':@react-native-community_async-storage')

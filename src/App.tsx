@@ -1,9 +1,12 @@
 import * as React from "react";
+import SplashScreen from "react-native-splash-screen";
+import DeviceInfo from "react-native-device-info";
 import AppNavigator from "./Navigation/AppNavigator";
 import { UrbanAirship } from "urbanairship-react-native";
-import { Modal, Text, View, Button } from "react-native";
+import { Modal, Text, View, Button, Alert } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useHttpClient } from "./services/useHttpClient";
+import LottieView from "lottie-react-native";
 import { Product } from "./interfaces/screen.interface";
 
 type Props = {};
@@ -11,37 +14,25 @@ export const App: React.FunctionComponent<Props> = () => {
   UrbanAirship.setUserNotificationsEnabled(true);
   UrbanAirship.addTag("someTag");
   const { isConnected } = useNetInfo();
-  const [isPushModal, setPushModal] = React.useState(false);
-  const [isShowModal, setShowModal] = React.useState(false);
-  const {
-    state: { lastFunction, lastArguments },
-    getProductsInShop
-  } = useHttpClient();
-  const functions = { getProductsInShop };
+  const [isPushModal, setPushModal] = React.useState(true);
   React.useEffect(() => {
-    if (!isConnected) {
-      setShowModal(true);
-    }
-  }, [isConnected]);
-  console.log(isConnected);
+    console.log(DeviceInfo.getDeviceName());
+    SplashScreen.hide();
+  }, []);
   return (
     <>
-      <Modal animationType="slide" visible={!isConnected}>
-        <Text>Network hasn't connection</Text>
-        <Text>You should restore network and try again</Text>
+      <Modal animationType="slide" visible={isPushModal}>
+        <Text>Welcome, comrade!</Text>
+        <Text>{DeviceInfo.getDevice()}</Text>
+        <LottieView
+          source={require("./assets/animations/watermelon.json")}
+          autoPlay
+          loop
+        />
         <Button
-          title="try again"
+          title="thank you, Pavel"
           onPress={() => {
-            setPushModal(true);
-            if (functions[lastFunction]) {
-              functions[lastFunction](lastArguments).then(
-                ({ docs, nextPage }: { docs: Product[]; nextPage: number }) => {
-                  setPushModal(false);
-                  setShowModal(false);
-                  console.log(docs, nextPage);
-                }
-              );
-            }
+            setPushModal(false);
           }}
         />
       </Modal>

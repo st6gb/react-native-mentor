@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.toast.RCTToastPackage;
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.airbnb.android.react.lottie.LottiePackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.urbanairship.reactnative.ReactAirshipPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -28,9 +31,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
-            new NetInfoPackage(),
-            new ReactAirshipPackage(), new AsyncStoragePackage(), new VectorIconsPackage(),
-          new RNGestureHandlerPackage(), new RCTToastPackage());
+            new RNDeviceInfo(),
+            new LottiePackage(), new SplashScreenReactPackage(), new NetInfoPackage(),
+          new ReactAirshipPackage(), new AsyncStoragePackage(), new VectorIconsPackage(), new RNGestureHandlerPackage(),
+          new RCTToastPackage());
     }
 
     @Override

@@ -121,6 +121,23 @@ export const executeOrder = async (tags: string[]) => {
   }
 }
 
+export const createNewUserV2 = async (values: { email: string, password: string }) => {
+  try {
+    const result = await httpClient.post(
+      "http://10.27.11.60:3001/new-user",
+      {
+        name: values.email,
+        password: values.password
+      }
+    );
+    console.log(result);
+    return result;
+  } catch (err) {
+    throw new Error(err);
+  }
+
+}
+
 export const httpClient = {
   async getAuthToken() {
     try {
@@ -173,14 +190,14 @@ export const httpClient = {
       throw new Error(`Request failed: ${err.message}`);
     }
   },
-  async post<T, R>(
+  async post<T>(
     url: string,
     body?: T,
   ) {
     return this.sendRequest('POST', url, body);
   },
 
-  async put<T, R>(
+  async put<T>(
     url: string,
     body?: T,
   ) {
@@ -188,7 +205,7 @@ export const httpClient = {
     return this.sendRequest(method, url, body);
   },
 
-  async delete<T, R>(
+  async delete<T>(
     url: string,
     body?: T,
   ) {

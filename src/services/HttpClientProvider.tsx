@@ -7,6 +7,10 @@ const initialState = {
     loading: false,
     data: [],
     page: 1
+  },
+  userProducts: {
+    data: [],
+    fetchUserProducts: false
   }
 };
 export const HttpClientStateContext = React.createContext(initialState);
@@ -29,6 +33,9 @@ interface Argument {
 export const ADD_PRODUCTS = "ADD_PRODUCTS";
 export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
 export const ADD_LAST_FUNCTION = "ADD_LAST_FUNCTION";
+export const FETCH_USERS_PRODUCTS = "FETCH_USERS_PRODUCTS";
+export const ADD_USERS_PRODUCTS = "ADD_USERS_PRODUCTS";
+export const CLEAR_USERS_PRODUCTS = "CLEAR_USERS_PRODUCTS";
 
 export const addLastFunction = (lastFunction: string, lastArguments: any) => {
   return {
@@ -40,9 +47,30 @@ export const addLastFunction = (lastFunction: string, lastArguments: any) => {
   };
 };
 
+export const clearUserProducts = () => {
+  return {
+    type: CLEAR_USERS_PRODUCTS
+  };
+};
+
 export const fetchProducts = () => {
   return {
     type: FETCH_PRODUCTS
+  };
+};
+
+export const fetchUsersProducts = () => {
+  return {
+    type: FETCH_USERS_PRODUCTS
+  };
+};
+
+export const addUsersProducts = (products: Product[]) => {
+  return {
+    type: ADD_USERS_PRODUCTS,
+    payload: {
+      products
+    }
   };
 };
 
@@ -85,6 +113,30 @@ const reducer = (
         ...state,
         lastFunction: payload.lastFunction,
         lastArguments: payload.lastArguments
+      };
+    case FETCH_USERS_PRODUCTS:
+      return {
+        ...state,
+        userProducts: {
+          ...state.userProducts,
+          fetchUserProducts: true
+        }
+      };
+    case ADD_USERS_PRODUCTS:
+      return {
+        ...state,
+        userProducts: {
+          data: payload.products,
+          fetchUserProducts: false
+        }
+      };
+    case CLEAR_USERS_PRODUCTS:
+      return {
+        ...state,
+        userProducts: {
+          data: [],
+          fetchUserProducts: false
+        }
       };
     default:
       return state;

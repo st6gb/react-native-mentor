@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
-import { addProductInList } from "../../services/httpClient";
+import { addProductInList, getUsersProducts } from "../../services/httpClient";
 import { useHttpClient } from "../../services/useHttpClient";
 import { Product } from "../../interfaces/screen.interface";
 import { notification } from "../../utils/notification";
@@ -26,12 +26,16 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const {
     getProductsInShop,
+    getUsersProducts,
+    deleteProducts,
     state: {
-      products: { data, loading, page }
+      products: { data, loading, page },
+      userProducts: { data: userData, fetchUserProducts }
     }
   } = useHttpClient();
   const { isConnected } = useNetInfo();
   React.useEffect(() => {
+    getUsersProducts();
     if (page === 1) {
       getProductsInShop(page);
     }
@@ -41,19 +45,27 @@ export const ProductList: React.FunctionComponent<Props> = props => {
       <FlatList
         data={data}
         ListFooterComponent={() =>
-          loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
+          loading || fetchUserProducts ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : null
         }
-        keyExtractor={(item: Product, index) => item._id}
-        onEndReachedThreshold={0.5}
+        keyExtractor={(item: Product, index) => item.name}
+        onEndReachedThreshold={0.1}
         onEndReached={() => {
-          getProductsInShop(page).catch(err => {
-            throw err;
-          });
+          console.log("=======================", page);
+          if (!loading) {
+            getProductsInShop(page).catch(err => {
+              throw err;
+            });
+          }
         }}
         renderItem={({ item: product }) => {
+          const isInCart = userData.find(
+            (pr: Product) => pr._id === product._id
+          );
           return (
             <TouchableOpacity
-              key={product._id}
+              key={product.name}
               style={styles.container}
               onPress={() => {
                 navigation.navigate("ProductDetails", { product });
@@ -65,8 +77,19 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                 raised
                 name="add-shopping-cart"
                 color="#f50"
+                underlayColor="pink"
+                iconStyle={{
+                  backgroundColor: isInCart && "green"
+                }}
                 onPress={() => {
+                  if (isInCart) {
+                    deleteProducts(product)
+                      .then(() => notification("удалено", "ok"))
+                      .catch(() => notification("ошибка", "error"));
+                    return;
+                  }
                   addProductInList(product).then(response => {
+                    getUsersProducts();
                     if (!response.ok) {
                       return notification("ошибка", "error");
                     }

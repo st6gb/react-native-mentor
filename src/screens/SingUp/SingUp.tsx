@@ -14,7 +14,7 @@ import {
 import { Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { createNewUser } from "../../services/httpClient";
+import { createNewUser, createNewUserV2 } from "../../services/httpClient";
 import { InputError } from "../../components/InputError";
 import { Navigation } from "../../interfaces/screen.interface";
 import { styles } from "./styles";
@@ -80,11 +80,11 @@ export const SingUp: React.FunctionComponent<Navigation> = props => {
         initialValues={{ email: "", password: "" }}
         validationSchema={SingUpSchema}
         onSubmit={values => {
-          createNewUser(values).then(response => {
+          createNewUserV2(values).then(response => {
             Alert.alert(
               "Alert",
               `${
-                response === 200
+                !response.message
                   ? "Пользователь успешно создан, перейти на страницу логина?"
                   : "Пользователь уже существует, попробуйте снова"
               }`,
@@ -96,7 +96,8 @@ export const SingUp: React.FunctionComponent<Navigation> = props => {
                 },
                 {
                   text: "OK",
-                  onPress: () => (response === 200 ? navigation.goBack() : null)
+                  onPress: () =>
+                    !response.message ? navigation.goBack() : null
                 }
               ],
               { cancelable: false }

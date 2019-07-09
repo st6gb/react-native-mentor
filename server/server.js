@@ -59,6 +59,19 @@ app.get('/products', async (req, res) => {
   }
 });
 
+app.delete('/products', async (req, res) => {
+  try {
+    const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtSecret);
+    const product = await Product.findOne({ name: req.body.name }).exec();
+    await User.update({ name: decodedUser.name }, { $pull: { products: product } });
+    const user = await User.findOne({ name: decodedUser.name });
+    const userProduct = user.products || [];
+    res.send(userProduct);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
 app.post('/setProduct', async (req, res) => {
   try {
     const { _doc: decodedUser } = jwt.verify(req.headers.token, jwtSecret);
