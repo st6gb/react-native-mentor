@@ -5,6 +5,19 @@ const productSchema = new mongoose.Schema({
   name: String,
   icon: String,
   description: String,
+  rating: Number,
+  listVoters: [
+    {
+      voter: String,
+      vote: String,
+    }
+  ],
+  comments: [
+    {
+      author: String,
+      body: String
+    }
+  ]
 })
 
 productSchema.plugin(mongoosePaginate);

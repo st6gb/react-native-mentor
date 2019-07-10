@@ -1,23 +1,23 @@
 const express = require('express');
 const app = express();
 const config = require('../config');
+const { routerProduct, jwtSecret } = require('./routerProduct');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const headerParser = require('header-parser');
 const jwt = require('jsonwebtoken');
 const jsonParser = bodyParser.json();
-const jwtSecret = "ssh";
-const cors = require('cors');
+
 const fetch = require('node-fetch');
 const { User, Product } = require('./schemasModel');
 const adminToken = 'Bearer MTpYTl9hYV9iQlJZQ0gwVmJ6SlI2QmR3OkhPZ0lDM1NYRXNzQUxqNWZZRGt6cS02WFVwRmFxTVRxem5mMjB1VWZDWnM';
 
-app.use(cors())
 app.use(jsonParser);
 app.use(headerParser);
-app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true });
+
+app.use('/api', routerProduct);
 
 app.post('/new-user', async (req, res) => {
   try {
@@ -43,19 +43,6 @@ app.get('/userProduct', async (req, res) => {
     res.send(product);
   } catch (err) {
     res.status(500).send(err)
-  }
-});
-
-app.get('/products', async (req, res) => {
-  try {
-    const options = {
-      page: req.query.page || 1,
-      limit: req.query.limits || 10
-    }
-    const products = await Product.paginate({}, options);
-    res.send(products);
-  } catch (err) {
-    res.status(401).send(err)
   }
 });
 

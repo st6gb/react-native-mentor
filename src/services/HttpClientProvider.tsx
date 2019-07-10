@@ -11,6 +11,17 @@ const initialState = {
   userProducts: {
     data: [],
     fetchUserProducts: false
+  },
+  productFullInfo: {
+    loading: false,
+    info: {
+      name: "",
+      icon: "",
+      description: "",
+      rating: "",
+      listVoters: [],
+      comments: []
+    }
   }
 };
 export const HttpClientStateContext = React.createContext(initialState);
@@ -36,6 +47,28 @@ export const ADD_LAST_FUNCTION = "ADD_LAST_FUNCTION";
 export const FETCH_USERS_PRODUCTS = "FETCH_USERS_PRODUCTS";
 export const ADD_USERS_PRODUCTS = "ADD_USERS_PRODUCTS";
 export const CLEAR_USERS_PRODUCTS = "CLEAR_USERS_PRODUCTS";
+export const FETCH_PRODUCT_INFORMATION = "FETCH_PRODUCT_INFORMATION";
+export const ADD_PRODUCT_INFORMATION = "ADD_PRODUCT_INFORMATION";
+export const ADD_INFO_PRODUCTS = "ADD_INFO_USERS_PRODUCTS";
+
+export const addInfoProducts = (product: Product) => {
+  return {
+    type: ADD_INFO_PRODUCTS,
+    payload: product
+  };
+};
+export const fetchInfoProduct = () => {
+  return {
+    type: FETCH_PRODUCT_INFORMATION
+  };
+};
+
+export const addInfoProduct = (product: Product) => {
+  return {
+    type: ADD_PRODUCT_INFORMATION,
+    payload: product
+  };
+};
 
 export const addLastFunction = (lastFunction: string, lastArguments: any) => {
   return {
@@ -130,12 +163,41 @@ const reducer = (
           fetchUserProducts: false
         }
       };
+    case ADD_INFO_PRODUCTS:
+      return {
+        ...state,
+        products: {
+          data: state.products.data.map((product: Product) => {
+            if (product._id === payload._id) {
+              return payload;
+            }
+            return product;
+          }),
+          fetchUserProducts: false
+        }
+      };
     case CLEAR_USERS_PRODUCTS:
       return {
         ...state,
         userProducts: {
           data: [],
           fetchUserProducts: false
+        }
+      };
+    case FETCH_PRODUCT_INFORMATION:
+      return {
+        ...state,
+        productFullInfo: {
+          ...state.productFullInfo,
+          loading: true
+        }
+      };
+    case ADD_PRODUCT_INFORMATION:
+      return {
+        ...state,
+        productFullInfo: {
+          info: payload,
+          loading: false
         }
       };
     default:

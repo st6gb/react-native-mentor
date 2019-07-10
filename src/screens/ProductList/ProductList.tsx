@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
-import { addProductInList, getUsersProducts } from "../../services/httpClient";
+import { addProductInList } from "../../services/httpClient";
 import { useHttpClient } from "../../services/useHttpClient";
 import { Product } from "../../interfaces/screen.interface";
 import { notification } from "../../utils/notification";
@@ -28,11 +28,14 @@ export const ProductList: React.FunctionComponent<Props> = props => {
     getProductsInShop,
     getUsersProducts,
     deleteProducts,
+    voteForProduct,
     state: {
       products: { data, loading, page },
       userProducts: { data: userData, fetchUserProducts }
     }
   } = useHttpClient();
+  const [userEmail, setUserEmail] = React.useState<string | null>("");
+  AsyncStorage.getItem("@name").then(res => setUserEmail(res));
   const { isConnected } = useNetInfo();
   React.useEffect(() => {
     getUsersProducts();
@@ -63,6 +66,11 @@ export const ProductList: React.FunctionComponent<Props> = props => {
           const isInCart = userData.find(
             (pr: Product) => pr._id === product._id
           );
+          const vote = product.listVoters.find(
+            elem => elem.voter === userEmail
+          );
+          const voteUp = vote && vote.vote === "+1";
+          const voteDown = vote && vote.vote === "-1";
           return (
             <TouchableOpacity
               key={product.name}
@@ -74,10 +82,36 @@ export const ProductList: React.FunctionComponent<Props> = props => {
               <Icon name={product.icon} size={35} iconStyle={styles.icon} />
               <Text style={styles.name}>{product.name}</Text>
               <Icon
-                raised
+                name="arrow-drop-down"
+                reverse
+                color={voteDown ? "red" : undefined}
+                onPress={() => {
+                  console.log(vote);
+                  if (vote && vote.vote === "-1") {
+                    return;
+                  }
+                  voteForProduct(product.name, "-1");
+                }}
+              />
+              <Text style={styles.name}>
+                {product.rating ? product.rating : 0}
+              </Text>
+              <Icon
+                name="arrow-drop-up"
+                color={voteUp ? "red" : undefined}
+                reverse
+                onPress={() => {
+                  if (vote && vote.vote === "+1") {
+                    return;
+                  }
+                  voteForProduct(product.name, "+1");
+                }}
+              />
+              <Icon
+                reverse
                 name="add-shopping-cart"
                 color="#f50"
-                underlayColor="pink"
+                underlayColor="red"
                 iconStyle={{
                   backgroundColor: isInCart && "green"
                 }}

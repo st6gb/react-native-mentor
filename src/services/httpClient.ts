@@ -1,27 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { notification } from "../utils/notification";
 
-export const getUsersProducts = async () => {
-  try {
-    const token = await AsyncStorage.getItem('@token');
-    if (token === null) throw ('error');
-    const strToken = JSON.parse(token);
-    const response = await fetch("http://10.27.11.60:3001/userProduct", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        token: strToken.token,
-      },
-      mode: "cors",
-    });
-    const json = await response.json();
-    return json;
-  } catch (err) {
-    throw (err);
-  }
-};
-
 export const LoginIn = async (navigation: any, values: any) => {
   try {
     const resp = await fetch("http://10.27.11.60:3001/auth", {
@@ -42,21 +21,13 @@ export const LoginIn = async (navigation: any, values: any) => {
       return;
     }
     await AsyncStorage.setItem("@token", JSON.stringify(json));
+    await AsyncStorage.setItem("@name", values.email);
     navigation.navigate("AppStack");
   } catch (err) {
     console.log(err);
   }
 };
 
-export const getProductsInShop = async (page: number) => {
-  try {
-    const response = await fetch(`http://10.27.11.60:3001/products?page=${page}`);
-    const json = await response.json();
-    return json;
-  } catch (err) {
-    throw (err);
-  }
-};
 
 export const addProductInList = async (product: any) => {
   try {
