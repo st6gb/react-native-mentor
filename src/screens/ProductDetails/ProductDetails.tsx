@@ -1,21 +1,23 @@
 import * as React from "react";
 import { View, Text, Button, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigation } from "../../interfaces/screen.interface";
 import { styles } from "./styles";
-import { useHttpClient } from "../../services/useHttpClient";
+import { Store } from "../../store";
+import { requestProductInformation } from "../../actions";
 
 export const ProductDetails: React.FunctionComponent<Navigation> = props => {
   const { navigation } = props;
   const product = navigation.getParam("product");
-  const {
-    getProduct,
-    state: {
-      productFullInfo: { info, loading }
-    }
-  } = useHttpClient();
+  const dispatch = useDispatch();
+  const { loading, error, info } = useSelector(
+    (state: Store) => state.productFullInfo
+  );
   React.useEffect(() => {
-    getProduct(product._id);
+    if (!loading) {
+      dispatch(requestProductInformation(product._id));
+    }
   }, []);
   return (
     <View style={styles.wrapper}>

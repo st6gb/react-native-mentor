@@ -13,15 +13,18 @@ import { Icon } from "react-native-elements";
 import LottieView from "lottie-react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { NavigationScreenProps } from "react-navigation";
-import { getUsersProducts, executeOrder } from "../../services/httpClient";
 import { UrbanAirship, UACustomEvent } from "urbanairship-react-native";
 import { notification } from "../../utils/notification";
 
 import { Product } from "../../interfaces/screen.interface";
 
 import { styles } from "./styles";
-import { useHttpClient } from "../../services/useHttpClient";
-import { clearUserProducts } from "../../services/HttpClientProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { Store } from "../../store";
+import {
+  requestGetProductInCart,
+  requestExecuteProductsInCart
+} from "../../actions";
 
 interface Props extends Navigation {
   navigationOptions: NavigationScreenProps;
@@ -30,16 +33,13 @@ interface Props extends Navigation {
 export const GoodsList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
   const [tags, setTags] = React.useState<string[]>([]);
-  const {
-    getUsersProducts,
-    state: {
-      userProducts: { data, fetchUserProducts }
-    },
-    dispatch
-  } = useHttpClient();
+  const dispatch = useDispatch();
+  const { data, error, fetchUserProducts } = useSelector(
+    (state: Store) => state.userProducts
+  );
   React.useEffect(() => {
     UrbanAirship.getTags().then(tags => setTags(tags));
-    getUsersProducts();
+    dispatch(requestGetProductInCart());
   }, []);
   return (
     <>
@@ -78,12 +78,7 @@ export const GoodsList: React.FunctionComponent<Props> = props => {
         <Button
           title="order"
           onPress={() => {
-            executeOrder(tags)
-              .then(res => {
-                if (res.nModified) return dispatch(clearUserProducts());
-                return notification("Empty", "attention");
-              })
-              .catch(() => notification("Error", "error"));
+            dispatch(requestExecuteProductsInCart(tags));
           }}
         />
       </ScrollView>

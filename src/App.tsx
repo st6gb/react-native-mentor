@@ -5,7 +5,6 @@ import AppNavigator from "./Navigation/AppNavigator";
 import { UrbanAirship } from "urbanairship-react-native";
 import { Modal, Text, View, Button, Alert } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { useHttpClient } from "./services/useHttpClient";
 import LottieView from "lottie-react-native";
 import { Product } from "./interfaces/screen.interface";
 

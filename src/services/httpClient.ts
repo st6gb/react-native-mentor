@@ -28,28 +28,6 @@ export const LoginIn = async (navigation: any, values: any) => {
   }
 };
 
-
-export const addProductInList = async (product: any) => {
-  try {
-    const token = await AsyncStorage.getItem('@token');
-    if (token === null) throw ('error');
-    const strToken = JSON.parse(token);
-    const response = await fetch('http://10.27.11.60:3001/setProduct', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        token: strToken.token,
-      },
-      mode: "cors",
-      body: JSON.stringify(product)
-    })
-    return response.json();
-  } catch (err) {
-    throw (err);
-  }
-};
-
 export const createNewUser = async (values: any) => {
   try {
     const resp = await fetch("http://10.27.11.60:3001/new-user", {
@@ -69,28 +47,6 @@ export const createNewUser = async (values: any) => {
     console.log(err);
   }
 };
-
-export const executeOrder = async (tags: string[]) => {
-  try {
-    const token = await AsyncStorage.getItem('@token');
-    if (token === null) throw ('error');
-    const strToken = JSON.parse(token);
-    const response = await fetch("http://10.27.11.60:3001/executeOrder", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        token: strToken.token,
-        tags: JSON.stringify(tags)
-      },
-      mode: "cors",
-    });
-    const json = await response.json();
-    return json;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 export const createNewUserV2 = async (values: { email: string, password: string }) => {
   try {
@@ -119,7 +75,7 @@ export const httpClient = {
       throw new Error(`Request failed: ${err.message}`)
     }
   },
-  async get(url: string) {
+  async get(url: string, tags?: string[]) {
     try {
       const token = await this.getAuthToken();
       const headers = new Headers({
@@ -127,6 +83,7 @@ export const httpClient = {
         "Content-Type": "application/json",
         Accept: "application/json",
         token,
+        tags: JSON.stringify(tags)
       });
       const rawResponse = await fetch(url, {
         method: 'GET',

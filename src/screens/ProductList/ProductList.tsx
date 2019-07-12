@@ -1,6 +1,7 @@
 import * as React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { NavigationScreenProps } from "react-navigation";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ActivityIndicator,
   View,
@@ -11,12 +12,17 @@ import {
 } from "react-native";
 import { Navigation } from "../../interfaces/screen.interface";
 import { Icon } from "react-native-elements";
-import { addProductInList } from "../../services/httpClient";
-import { useHttpClient } from "../../services/useHttpClient";
 import { Product } from "../../interfaces/screen.interface";
-import { notification } from "../../utils/notification";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { styles } from "./styles";
+import {
+  requestProduct,
+  requestProductInCart as requestAddProductInCart,
+  requestDeleteProductInCart,
+  requestGetProductInCart,
+  requestVoteProduct
+} from "../../actions";
+import { Store } from "../../store";
 
 interface Props extends Navigation {
   navigationOptions: NavigationScreenProps;
@@ -24,23 +30,18 @@ interface Props extends Navigation {
 
 export const ProductList: React.FunctionComponent<Props> = props => {
   const { navigation } = props;
-  const {
-    getProductsInShop,
-    getUsersProducts,
-    deleteProducts,
-    voteForProduct,
-    state: {
-      products: { data, loading, page },
-      userProducts: { data: userData, fetchUserProducts }
-    }
-  } = useHttpClient();
+  const dispatch = useDispatch();
+  const { data, loading, page } = useSelector((state: Store) => state.products);
+  const { data: userData, fetchUserProducts } = useSelector(
+    (state: Store) => state.userProducts
+  );
   const [userEmail, setUserEmail] = React.useState<string | null>("");
   AsyncStorage.getItem("@name").then(res => setUserEmail(res));
   const { isConnected } = useNetInfo();
   React.useEffect(() => {
-    getUsersProducts();
-    if (page === 1) {
-      getProductsInShop(page);
+    dispatch(requestGetProductInCart());
+    if (page === 1 && !loading) {
+      dispatch(requestProduct(page));
     }
   }, []);
   return (
@@ -55,11 +56,8 @@ export const ProductList: React.FunctionComponent<Props> = props => {
         keyExtractor={(item: Product, index) => item.name}
         onEndReachedThreshold={0.1}
         onEndReached={() => {
-          console.log("=======================", page);
           if (!loading) {
-            getProductsInShop(page).catch(err => {
-              throw err;
-            });
+            dispatch(requestProduct(page));
           }
         }}
         renderItem={({ item: product }) => {
@@ -86,11 +84,10 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                 reverse
                 color={voteDown ? "red" : undefined}
                 onPress={() => {
-                  console.log(vote);
                   if (vote && vote.vote === "-1") {
                     return;
                   }
-                  voteForProduct(product.name, "-1");
+                  dispatch(requestVoteProduct(product.name, "-1"));
                 }}
               />
               <Text style={styles.name}>
@@ -104,7 +101,7 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                   if (vote && vote.vote === "+1") {
                     return;
                   }
-                  voteForProduct(product.name, "+1");
+                  dispatch(requestVoteProduct(product.name, "+1"));
                 }}
               />
               <Icon
@@ -117,21 +114,10 @@ export const ProductList: React.FunctionComponent<Props> = props => {
                 }}
                 onPress={() => {
                   if (isInCart) {
-                    deleteProducts(product)
-                      .then(() => notification("удалено", "ok"))
-                      .catch(() => notification("ошибка", "error"));
+                    dispatch(requestDeleteProductInCart(product.name));
                     return;
                   }
-                  addProductInList(product).then(response => {
-                    getUsersProducts();
-                    if (!response.ok) {
-                      return notification("ошибка", "error");
-                    }
-                    if (response.nModified) {
-                      return notification("Добавлено", "ok");
-                    }
-                    return notification("Уже добавлено", "attention");
-                  });
+                  dispatch(requestAddProductInCart(product.name));
                 }}
               />
             </TouchableOpacity>

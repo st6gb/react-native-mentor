@@ -68,7 +68,8 @@ routerProduct.post('/vote', async (req, res) => {
       }
       return elem;
     });
-    if (!newListVoters.length) {
+    const isExistInVote = listVoters.find(elem => elem.voter === decodedUser.name);
+    if (!isExistInVote) {
       newListVoters.push({
         voter: decodedUser.name,
         vote: req.body.rating
