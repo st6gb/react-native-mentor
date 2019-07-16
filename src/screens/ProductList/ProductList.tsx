@@ -1,7 +1,7 @@
 import * as React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { NavigationScreenProps } from "react-navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import {
   ActivityIndicator,
   View,
@@ -35,6 +35,8 @@ export const ProductList: React.FunctionComponent<Props> = props => {
   const { data: userData, fetchUserProducts } = useSelector(
     (state: Store) => state.userProducts
   );
+  const store = useStore();
+  console.log(store.getState());
   const [userEmail, setUserEmail] = React.useState<string | null>("");
   AsyncStorage.getItem("@name").then(res => setUserEmail(res));
   const { isConnected } = useNetInfo();

@@ -48,7 +48,8 @@ const initialProducts = {
   loading: false,
   error: false,
   data: [],
-  page: 1
+  page: 1,
+  crazy: 'lala',
 };
 
 export const reducerProducts = (
